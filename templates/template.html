@@ -1,0 +1,37 @@
+<!-- template.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Chat</title>
+    <style>
+        #chat-box {
+            width: 400px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+<div id="chat-box"></div>
+<input type="text" id="message" placeholder="Type your message">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    const socket = new WebSocket("ws://" + window.location.host + "/ws");
+    const chatBox = document.getElementById("chat-box");
+
+    socket.onmessage = function (event) {
+        const message = document.createElement("p");
+        message.innerText = event.data;
+        chatBox.appendChild(message);
+    };
+
+    function sendMessage() {
+        const messageInput = document.getElementById("message");
+        const message = messageInput.value;
+        socket.send(message);
+        messageInput.value = "";
+    }
+</script>
+</body>
+</html>
